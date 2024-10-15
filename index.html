@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style type="text/css">
+        *{padding:0;margin:0;}
+        .line{height:26px;margin-bottom: 5px;}
+        .pixel{width:20px; height:26px;background-color:#e3e3e3;margin:1px;
+         display: inline-block;text-align: center;align-items: center;align-content: center;vertical-align: center;}
+        .pad{
+            display:inline-block;width:20px; height:26px;margin:1px;
+        }
+    </style>
+    <script type="text/javascript">
+
+        (function() {
+            // 定义延迟函数
+            function delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            // 按顺序逐个添加字符并延迟
+            async function pushchar(char) {
+                let lineDiv = document.createElement('div');
+                lineDiv.className = "line";
+                document.body.appendChild(lineDiv);
+
+                // 按顺序逐个字符添加，确保每个字符添加后延迟 1 毫秒
+                for (let str of char) {
+                    let pixelDiv = document.createElement('div');
+                    pixelDiv.className = str === "*" ? "pixel" : "pad";
+                    pixelDiv.textContent = str;
+
+                    // 使用 await 来确保每个字符按顺序添加
+                    lineDiv.appendChild(pixelDiv);
+                    await delay(0.1); // 每个字符添加后延迟 1 毫秒
+                }
+            }
+
+            window.onload = async function() {
+                for (let y = 1.5; y > -1.5; y -= 0.1) {
+                    let line = "";
+                    for (let x = -1.5; x < 1.5; x += 0.05) {
+                        let a = x * x + y * y - 1;
+                        if (a * a * a - x * x * y * y * y < 0.0) {
+                            line += "*";
+                        } else {
+                            line += " "; // 插入两个空格
+                        }
+                    }
+                    // 调用函数逐行渲染
+                    await pushchar(line);
+                }
+            };
+        })();
+
+
+    </script>
+</head>
+<body style="background-color:transparent !important;">
+</body>
+</html>
